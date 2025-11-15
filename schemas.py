@@ -14,8 +14,7 @@ Model name is converted to lowercase for the collection name:
 from pydantic import BaseModel, Field
 from typing import Optional
 
-# Example schemas (replace with your own):
-
+# Existing example schemas (kept for reference)
 class User(BaseModel):
     """
     Users collection schema
@@ -38,11 +37,24 @@ class Product(BaseModel):
     category: str = Field(..., description="Product category")
     in_stock: bool = Field(True, description="Whether product is in stock")
 
-# Add your own schemas here:
-# --------------------------------------------------
+# App-specific schemas
+class Userprofile(BaseModel):
+    """
+    User profiles for the diet planner app
+    Collection name: "userprofile"
+    """
+    name: str = Field(..., description="Display name")
+    age: int = Field(..., ge=13, le=70, description="Age (13-70)")
+    level: int = Field(1, ge=1, description="Gamified level")
+    xp: int = Field(0, ge=0, description="Experience points")
 
-# Note: The Flames database viewer will automatically:
-# 1. Read these schemas from GET /schema endpoint
-# 2. Use them for document validation when creating/editing
-# 3. Handle all database operations (CRUD) directly
-# 4. You don't need to create any database endpoints!
+class Task(BaseModel):
+    """
+    Tasks assigned or added by users
+    Collection name: "task"
+    """
+    user_id: str = Field(..., description="Related userprofile _id as string")
+    title: str = Field(..., description="Task title")
+    day: Optional[str] = Field(None, description="Optional day label, e.g., 2025-11-15")
+    completed: bool = Field(False, description="Whether the task is completed")
+    xp_value: int = Field(10, ge=0, description="XP earned upon completion")
